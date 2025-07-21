@@ -1,0 +1,407 @@
+<head>
+  <meta charset="UTF-8" />
+  <title>Manager Checklist – Guest Ready</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+  <style>
+    body {
+      background-color: #eef3f9;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    .ribbon-header {
+      border: 3px solid #004080;
+      background: linear-gradient(to right, #003366, #004080, #003366);
+      color: white;
+      font-size: 2em;
+      font-weight: bold;
+      padding: 20px;
+      text-align: center;
+      border-radius: 12px;
+      box-shadow: 0 0 12px rgba(0, 64, 128, 0.5);
+      margin-bottom: 20px;
+    }
+
+    .ribbon-reminder {
+      background: linear-gradient(to right, #003366, #004080, #003366);
+      color: white;
+      font-weight: bold;
+      font-size: 1.1em;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 25px;
+      text-align: center;
+      box-shadow: 0 0 8px rgba(0, 64, 128, 0.4);
+    }
+
+    .ribbon-box {
+      background: linear-gradient(to bottom, #e6ecf5, #ffffff);
+      border: 2px solid #003366;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 30px;
+      box-shadow: 0 0 8px rgba(0, 51, 102, 0.3);
+    }
+
+    .ribbon-box h2 {
+      color: #002244;
+      font-size: 1.5em;
+      font-weight: bold;
+      margin-bottom: 12px;
+      padding-bottom: 6px;
+      position: relative;
+    }
+
+    .ribbon-box h2::after {
+      content: "";
+      display: block;
+      height: 6px;
+      width: 100%;
+      background: linear-gradient(to right, #003366, #004080, #003366);
+      border-radius: 3px;
+      margin-top: 6px;
+    }
+
+    label {
+      display: block;
+      margin: 6px 0;
+      font-weight: bold;
+    }
+
+    .row-flex {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      gap: 20px;
+    }
+
+    .row-flex img {
+      width: 100%;
+      max-width: 280px;
+      border: 2px solid #004080;
+      border-radius: 8px;
+      animation: shimmer 2s infinite linear;
+    }
+
+    @keyframes shimmer {
+      0% { border-color: #003366; }
+      50% { border-color: #004080; }
+      100% { border-color: #003366; }
+    }
+
+    input[type="text"] {
+      font-size: 1.1em;
+      font-weight: bold;
+      padding: 10px;
+      border: 2px solid #004080;
+      border-radius: 6px;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    button {
+      background: linear-gradient(to right, #003366, #004080, #003366);
+      color: white;
+      font-weight: bold;
+      border: 2px solid #003366;
+      padding: 10px 20px;
+      margin: 10px 6px 0 0;
+      border-radius: 6px;
+      cursor: pointer;
+      box-shadow: 0 0 5px rgba(0,64,128,0.4);
+    }
+
+    button:hover {
+      background: linear-gradient(to right, #004080, #0050aa, #004080);
+    }
+
+    .hide-in-pdf { display: block; }
+    .pdf-mode .hide-in-pdf { display: none !important; }
+
+    @media (max-width: 600px) {
+      .row-flex { flex-direction: column; }
+      .row-flex img { margin: 10px auto; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- 📛 Main Header -->
+<div class="ribbon-header">Manager Checklist – Guest Ready</div>
+
+<!-- 🧠 Reminder Banner -->
+<div class="ribbon-reminder">
+  Reminder: Please take at least one photo for each checklist section to ensure visual confirmation.
+</div>
+
+<!-- 📋 Manager Info -->
+<div class="ribbon-box hide-in-pdf" style="display: flex; flex-direction: column; align-items: center;">
+  <h2 style="width: 100%; text-align: center;">Checklist Info</h2>
+  <label for="checklistMeta" style="font-weight: bold;">Manager Name / Store ID / Location:</label>
+  <input id="checklistMeta" type="text"
+    placeholder="e.g. Francisco / Store #102 / Arlington, TX"
+    oninput="localStorage.setItem('managerMeta', this.value)"
+  >
+</div>
+
+<!-- 🚗 Parking Lot -->
+<div class="ribbon-box">
+  <h2>Parking Lot</h2>
+  <div class="row-flex">
+    <div style="flex: 1;">
+      <label><input type="checkbox"> Dumpster lid, gate and surrounding area clean</label>
+      <label><input type="checkbox"> Trash and debris removed</label>
+      <label><input type="checkbox"> Grease barrel checked</label>
+      <label><input type="checkbox"> All parking lights working</label>
+      <input type="file" accept="image/*" onchange="previewImage(this, 'preview-parking')">
+    </div>
+    <img id="preview-parking" alt="Parking Lot Preview">
+  </div>
+</div>
+
+<!-- 🚻 Restrooms -->
+<div class="ribbon-box">
+  <h2>Restrooms</h2>
+  <div class="row-flex">
+    <div style="flex: 1;">
+      <label><input type="checkbox"> Stocked with supplies</label>
+      <label><input type="checkbox"> Diaper station clean</label>
+      <label><input type="checkbox"> Clean sinks, mirrors, floors</label>
+      <label><input type="checkbox"> Odor-free and tidy</label>
+      <input type="file" accept="image/*" onchange="previewImage(this, 'preview-restrooms')">
+    </div>
+    <img id="preview-restrooms" alt="Restrooms Preview">
+  </div>
+</div>
+
+<!-- 🍽 Dining Room -->
+<div class="ribbon-box">
+  <h2>Dining Room</h2>
+  <div class="row-flex">
+    <div style="flex: 1;">
+      <label><input type="checkbox"> Prebussing is active with all employees</label>
+      <label><input type="checkbox"> Empty & clean coffee pots</label>
+      <label><input type="checkbox"> Tables clean & set</label>
+      <label><input type="checkbox"> Floors, glass, ceiling tiles, and vents clean</label>
+      <label><input type="checkbox"> Music at appropriate volume</label>
+      <input type="file" accept="image/*" onchange="previewImage(this, 'preview-dining')">
+    </div>
+    <img id="preview-dining" alt="Dining Room Preview">
+  </div>
+</div>
+<!-- ❄️ Walk-In -->
+<div class="ribbon-box">
+  <h2>Walk-In</h2>
+  <div class="row-flex">
+    <div style="flex: 1;">
+      <label><input type="checkbox"> Walk-in hierarchy maintained</label>
+      <label><input type="checkbox"> Labels in walk-in correct</label>
+      <label><input type="checkbox"> FIFO system followed</label>
+      <input type="file" accept="image/*" onchange="previewImage(this, 'preview-walkin')">
+    </div>
+    <img id="preview-walkin" alt="Walk-In Preview">
+  </div>
+</div>
+
+<!-- 🏬 Storage Rooms -->
+<div class="ribbon-box">
+  <h2>Storage Rooms</h2>
+  <div class="row-flex">
+    <div style="flex: 1;">
+      <label><input type="checkbox"> Shelves organized and labeled</label>
+      <label><input type="checkbox"> Par levels verified</label>
+      <label><input type="checkbox"> Floors clean and dry</label>
+      <input type="file" accept="image/*" onchange="previewImage(this, 'preview-storage')">
+    </div>
+    <img id="preview-storage" alt="Storage Room Preview">
+  </div>
+</div>
+
+<!-- 🧼 Dish Machine -->
+<div class="ribbon-box">
+  <h2>Dish Machine</h2>
+  <div class="row-flex">
+    <div style="flex: 1;">
+      <label><input type="checkbox"> Clean organized shelves</label>
+      <label><input type="checkbox"> Strainer under stored products</label>
+      <label><input type="checkbox"> 3-compartment sinks clean/set up</label>
+      <label><input type="checkbox"> Sanitizer PPM verified</label>
+      <input type="file" accept="image/*" onchange="previewImage(this, 'preview-dish')">
+    </div>
+    <img id="preview-dish" alt="Dish Machine Preview">
+  </div>
+</div>
+
+<!-- 🧪 Chemicals -->
+<div class="ribbon-box">
+  <h2>Chemicals</h2>
+  <div class="row-flex">
+    <div style="flex: 1;">
+      <label><input type="checkbox"> Stored properly</label>
+      <label><input type="checkbox"> No spray bottles sitting around food areas</label>
+      <label><input type="checkbox"> Stored far from food & preferably on bottom shelves</label>
+      <input type="file" accept="image/*" onchange="previewImage(this, 'preview-chemicals')">
+    </div>
+    <img id="preview-chemicals" alt="Chemicals Preview">
+  </div>
+</div>
+<!-- 👕 Uniforms -->
+<div class="ribbon-box">
+  <h2>Uniforms</h2>
+  <div class="row-flex">
+    <div style="flex: 1;">
+      <label><input type="checkbox"> Proper uniforms and name tags</label>
+      <label><input type="checkbox"> Clothing not wrinkled, dirty or faded</label>
+      <label><input type="checkbox"> Manager uniforms meet standards</label>
+      <input type="file" accept="image/*" onchange="previewImage(this, 'preview-uniforms')">
+    </div>
+    <img id="preview-uniforms" alt="Uniforms Preview">
+  </div>
+</div>
+
+<!-- 🌡️ Temperatures -->
+<div class="ribbon-box">
+  <h2>Temperatures</h2>
+  <div class="row-flex">
+    <div style="flex: 1;">
+      <label><input type="checkbox"> Walk-in cooler/freezer at proper temperature</label>
+      <label><input type="checkbox"> All reach-in coolers checked</label>
+      <label><input type="checkbox"> Temperature log taken at appropriate times</label>
+      <input type="file" accept="image/*" onchange="previewImage(this, 'preview-temperatures')">
+    </div>
+    <img id="preview-temperatures" alt="Temperatures Preview">
+  </div>
+</div>
+
+<!-- 🧊 Reach-In Coolers -->
+<div class="ribbon-box">
+  <h2>Reach-In Coolers (FOH & BOH)</h2>
+  <div class="row-flex">
+    <div style="flex: 1;">
+      <label><input type="checkbox"> FIFO followed</label>
+      <label><input type="checkbox"> Product hierarchy maintained</label>
+      <input type="file" accept="image/*" onchange="previewImage(this, 'preview-reachin')">
+    </div>
+    <img id="preview-reachin" alt="Reach-In Preview">
+  </div>
+</div>
+
+<!-- 🚀 Export Controls -->
+<div class="ribbon-box hide-in-pdf" style="display: flex; flex-direction: column; align-items: center;">
+  <h2 style="width: 100%; text-align: center;">Export Options</h2>
+  <button onclick="exportToPDF()">📄 Export to PDF</button>
+  <button onclick="shareViaWhatsApp()">📤 Share via WhatsApp</button>
+  <button onclick="resetChecklist()">🔄 Reset All</button>
+</div>
+<script>
+  // 💾 Restore manager info
+  window.addEventListener("DOMContentLoaded", () => {
+    const savedMeta = localStorage.getItem("managerMeta");
+    if (savedMeta) {
+      const metaInput = document.getElementById("checklistMeta");
+      if (metaInput) metaInput.value = savedMeta;
+    }
+  });
+
+  // 📸 Live image preview
+  function previewImage(input, previewId) {
+    const preview = document.getElementById(previewId);
+    if (!input.files?.length) return preview.src = "";
+    const file = input.files[0];
+    if (!file.type.startsWith("image/")) return preview.src = "";
+    setTimeout(() => {
+      const reader = new FileReader();
+      reader.onload = e => (preview.src = e.target.result);
+      reader.readAsDataURL(file);
+    }, 100);
+  }
+
+  // 📄 Export to PDF
+  function exportToPDF() {
+    document.body.classList.add("pdf-mode");
+
+    const metaInput = document.getElementById("checklistMeta")?.value.trim() || "";
+    const timestamp = new Date().toLocaleString('en-US', {
+      weekday: 'short', year: 'numeric', month: 'short',
+      day: 'numeric', hour: '2-digit', minute: '2-digit'
+    });
+
+    const clone = document.body.cloneNode(true);
+    clone.querySelectorAll(".hide-in-pdf").forEach(el => el.remove());
+    clone.querySelectorAll("script").forEach(s => s.remove());
+
+    const headerHTML = `
+      <div class="ribbon-header">Manager Checklist – Guest Ready</div>
+      <div style="text-align:center; font-weight:bold; font-size:0.95em; margin-bottom:10px;">
+        Inspection Timestamp: ${timestamp}
+      </div>
+      ${metaInput ? `
+        <div style="text-align:center; font-size:0.9em; font-style:italic; margin-bottom:15px;">
+          Details: ${metaInput}
+        </div>` : ""}
+    `;
+
+    // 🧠 Inject header before first section
+    const firstSection = clone.querySelector(".ribbon-box");
+    if (firstSection) {
+      const firstHeader = document.createElement("div");
+      firstHeader.innerHTML = headerHTML;
+      firstSection.parentNode.insertBefore(firstHeader, firstSection);
+    }
+
+    // 📌 Inject header before all later sections
+    clone.querySelectorAll(".ribbon-box").forEach((box, i) => {
+      if (i > 0) {
+        const sectionHeader = document.createElement("div");
+        sectionHeader.innerHTML = headerHTML;
+        sectionHeader.style = "page-break-before: always;";
+        box.parentNode.insertBefore(sectionHeader, box);
+      }
+    });
+
+    html2pdf().set({
+      margin: 0.5,
+      filename: "Manager-Checklist.pdf",
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: {
+        scale: 3,
+        scrollY: 0,
+        useCORS: true,
+        windowWidth: document.body.scrollWidth,
+        windowHeight: document.body.scrollHeight
+      },
+      jsPDF: { unit: "in", format: "letter", orientation: "portrait" }
+    }).from(clone).save();
+
+    setTimeout(() => document.body.classList.remove("pdf-mode"), 1000);
+  }
+
+  // 💬 Share checklist summary via WhatsApp
+  function shareViaWhatsApp() {
+    const meta = document.getElementById("checklistMeta")?.value.trim();
+    const dateStamp = new Date().toLocaleString('en-US', {
+      weekday: 'short', year: 'numeric', month: 'short',
+      day: 'numeric', hour: '2-digit', minute: '2-digit'
+    });
+
+    let checklistText = `Manager Checklist – Guest Ready\nInspection Timestamp: ${dateStamp}\n`;
+    if (meta) checklistText += `Details: ${meta}\n\n`;
+
+    document.querySelectorAll("label").forEach(label => {
+      const checkbox = label.querySelector("input[type='checkbox']");
+      if (checkbox?.checked) {
+        checklistText += "✅ " + label.textContent.trim() + "\n";
+      }
+    });
+
+    const encoded = encodeURIComponent(checklistText);
+    window.open(`https://wa.me/?text=${encoded}`, "_blank");
+  }
+
+  // 🔄 Reset all checklist fields
+  function resetChecklist() {
+    document.querySelectorAll("input[type='checkbox']").forEach(cb => cb.checked = false);
+    document.querySelectorAll("input[type='file']").forEach(fi => fi.value = "");
+    document.querySelectorAll("img[id^='preview-']").forEach(img => img.src = "");
+  }
+</script>
